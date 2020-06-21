@@ -1,0 +1,4 @@
+{
+	"server": ":4118",
+	"redis" : "counter-redis:6379"
+}

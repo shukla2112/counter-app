@@ -1,0 +1,4 @@
+{
+	"server": ":4118",
+	"redis" : "localhost:6379"
+}
