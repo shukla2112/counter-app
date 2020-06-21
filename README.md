@@ -2,16 +2,19 @@
 redis based counter app
 
 ## APIS
-GET /counter/:key
+#### GET /counter/:key
 
 ```shell
  curl -XGET localhost:4118/counter/mykey
  {"key":"mykey","status":1,"value":"11"}
  ```
 
-POST /counter/:key
-data
-operation: string : values can be - incr/decr
+#### POST /counter/:key
+
+**data**
+
+operation: string : values can be - `incr/decr`
+
 multiplier: int64 : values can be > 1
 
 ```shell
