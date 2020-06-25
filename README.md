@@ -33,3 +33,33 @@ curl -XPOST localhost:4118/counter/mykey -H "Content-Type: application/json" -d 
 curl -XPOST localhost:4118/counter/mykey -H "Content-Type: application/json" -d '{"operation":"decr", "multiplier" : 4}'
 {"key":"mykey","status":1,"value":"10"}
 ```
+
+
+
+#### POST /counter/:key/init
+
+* initiate the counter, gets the data using the query given from the database given
+* datasource supported : mysql/postgres
+
+input
+```javascript
+{
+  "query": "select count(*) as count from tasks;",
+  "connection-details": {
+    "datasource": "mysql",
+    "host": "127.0.0.1",
+    "username": "test",
+    "password": "1234",
+    "port": 3306,
+    "dbname": "test"
+  }
+}
+```
+
+samples
+
+```shell
+curl -XPOST localhost:4118/counter/taskcounter/init -H "Content-Type: application/json" -d '{"query":"select count(*) as count from tasks;", "connection-details": { "datasource": "mysql", "host": "127.0.0.1", "username": "test", "password": "1234", "port": 3306, "dbname": "test"}}'
+
+curl -XPOST localhost:4118/counter/counter1/init -H "Content-Type: application/json" -d '{"query":"select count(*) from counter1;", "connection-details": { "datasource": "postgres", "host": "127.0.0.1", "username": "postgres", "password": "1234", "port": 5432, "dbname": "test"}}'
+```

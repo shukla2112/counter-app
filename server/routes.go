@@ -30,6 +30,7 @@ func NewRouter(useSyslog bool, appC *config.AppConfig) *gin.Engine {
 		// Counter App : endpoints
 		Route{"GET", "/counter/:key", handler.GetCounter(appC)},
 		Route{"POST", "/counter/:key", handler.SetCounter(appC)},
+		Route{"POST", "/counter/:key/init", handler.InitCounter(appC)},
 		// Route{"POST", "/counter/:key", handler.EndpointHandler(operator.NewOpCounterInput, operator.OpCounter, appC)},
 
 	}

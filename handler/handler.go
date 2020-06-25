@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shukla2112/counter-app/config"
+	"github.com/shukla2112/counter-app/databases"
 	"github.com/shukla2112/counter-app/redis"
 	"github.com/shukla2112/counter-app/utils"
 )
@@ -131,5 +133,54 @@ func SetCounter(appC *config.AppConfig) gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, gin.H{"status": 1, "value": retval, "key": counterKey})
+	}
+}
+
+// InitCounterInput :
+type InitCounterInput struct {
+	Key               string                      `json:"key"`
+	ConnectionDetails databases.ConnectionDetails `json:"connection-details"`
+	Query             string                      `json:"query"`
+}
+
+// InitCounter :
+func InitCounter(appC *config.AppConfig) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var initCounterInput InitCounterInput
+
+		if err := c.BindJSON(&initCounterInput); err != nil {
+			utils.ReturnData(http.StatusInternalServerError, err.Error(), 0, c)
+			return
+		}
+		initCounterInput.Key = c.Param("key")
+
+		fmt.Printf("Input : %v\n", initCounterInput)
+
+		// Establish a connection
+		con, err := databases.EstConnection(initCounterInput.ConnectionDetails)
+		defer con.Close()
+		// fmt.Println(con)
+		if err != nil {
+			utils.ReturnData(http.StatusInternalServerError, err.Error(), 0, c)
+			return
+		}
+
+		// Run the query - against datasource
+		counterValue, err := databases.RunQuery(con, initCounterInput.Query)
+		if err != nil {
+			utils.ReturnData(http.StatusInternalServerError, err.Error(), 0, c)
+			return
+		}
+		// fmt.Println(strconv.Itoa(*counterValue))
+
+		// Set the redis key
+		setVal, err := redis.RSet(initCounterInput.Key, strconv.Itoa(*counterValue), appC.RedisPool)
+		if err != nil {
+			utils.ReturnData(http.StatusInternalServerError, err.Error(), 0, c)
+			return
+		}
+		fmt.Printf("Redis set : Key/Value : %s/%s\n", initCounterInput.Key, setVal)
+
+		c.JSON(http.StatusOK, gin.H{"status": 1, "key": initCounterInput.Key, "value": counterValue})
 	}
 }
