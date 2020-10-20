@@ -20,7 +20,7 @@ type CliArgs struct {
 
 // ReadCliArgs : Read CLI args passed to this service
 func ReadCliArgs() (CliArgs, string) {
-	mode := flag.String("mode", "dev", "Mode for counter-app (development/staging/production)")
+	mode := flag.String("mode", "dev", "Mode for counter-app (dev/staging/production)")
 	flag.Parse()
 
 	cliArgs := CliArgs{

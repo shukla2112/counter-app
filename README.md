@@ -63,3 +63,10 @@ curl -XPOST localhost:4118/counter/taskcounter/init -H "Content-Type: applicatio
 
 curl -XPOST localhost:4118/counter/counter1/init -H "Content-Type: application/json" -d '{"query":"select count(*) from counter1;", "connection-details": { "datasource": "postgres", "host": "127.0.0.1", "username": "postgres", "password": "1234", "port": 5432, "dbname": "test"}}'
 ```
+
+
+## Dependancy management
+using gomod
+
+## Build
+Makefile

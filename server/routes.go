@@ -25,9 +25,15 @@ type Routes []Route
 // NewRouter :
 func NewRouter(useSyslog bool, appC *config.AppConfig) *gin.Engine {
 	var routes = Routes{
-		Route{"GET", "/", IndexHandler},
-
+        //
 		// Counter App : endpoints
+        //
+
+        // Health endpoint
+		Route{"GET", "/", IndexHandler},
+        //Route{"GET", "/counter/v1", IndexHandler},
+
+        // Endpoints
 		Route{"GET", "/counter/:key", handler.GetCounter(appC)},
 		Route{"POST", "/counter/:key", handler.SetCounter(appC)},
 		Route{"POST", "/counter/:key/init", handler.InitCounter(appC)},
